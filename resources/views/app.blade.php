@@ -7,7 +7,7 @@
     @vite('resources/css/app.css')
 </head>
 <body>
-    <h1>Laravel 03 Rount Tester version 1.0.0</h1>
+    <h1>Laravel 03 Rount Tester version 1.0.1</h1>
     <hr>
 
     <div id="app-vue">
