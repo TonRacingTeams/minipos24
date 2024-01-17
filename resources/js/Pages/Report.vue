@@ -1,18 +1,12 @@
-
-
 <template>
     <div>
-        <h1>Home Vue JS</h1>
+        <h1>Report Up Page</h1>
     </div>
 </template>
 
-
-
-
-
 <script>
 export default {
-    name: 'WebAppLrvHome',
+    name: 'WebAppLrvReport',
 
     data() {
         return {
@@ -29,11 +23,6 @@ export default {
     },
 };
 </script>
-
-
-
-
-
 
 <style lang="scss" scoped>
 
