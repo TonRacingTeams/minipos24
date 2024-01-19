@@ -1,24 +1,12 @@
 <template>
     <div>
-        <h1>Report Up Page</h1>
-
-        <hr>
-
-        Token: {{store.get_token}}
-
-
+        <h1>LOGIN</h1>
     </div>
 </template>
 
 <script>
-import { useStore } from '../Store/auth'
 export default {
-    name: 'WebAppLrvReport',
-
-    setup(){
-        const store = useStore();
-        return {store}
-    },
+    name: 'WebAppLrvLogin',
 
     data() {
         return {
