@@ -38,7 +38,8 @@ export default {
 
     methods: {
         add(){
-            this.store.set_token(this.text)
+            localStorage.setItem('web_token',this.text)
+            // this.store.set_token(this.text)
         }
     },
 };

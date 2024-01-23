@@ -7,6 +7,8 @@ import Store from '../Pages/Store.vue';
 import Transection from '../Pages/Transection.vue';
 import No_page from '../Pages/No_page.vue';
 import { useStore } from "../Store/auth";
+import Login from '../Pages/Login.vue';
+import Register from '../Pages/Register.vue';
 
 
 const authMiddleware = (to, from, next) =>{
@@ -43,6 +45,19 @@ export const routes = [
         component: Home
     },
     {
+        name: 'login',
+        path: '/login',
+        component: Login
+    },
+    {
+        name: 'register',
+        path: '/register',
+        component: Register,
+        meta: {
+            middleware: [authMiddleware]
+        }
+    },
+    {
         name: 'pos',
         path: '/pos',
         component: Pos,
@@ -61,10 +76,10 @@ export const routes = [
     {
         name: 'store',
         path: '/store',
-        component: Store,
-        meta: {
-            middleware: [authMiddleware]
-        }
+        component: Store
+        // meta: {
+        //     middleware: [authMiddleware]
+        // }
     },
     {
         name: 'transection',

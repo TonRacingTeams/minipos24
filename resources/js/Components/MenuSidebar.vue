@@ -56,31 +56,31 @@
 <ul class="menu-inner py-1">
 
   <!-- Dashboards -->
-  <li class="menu-item" :class="$route.path== '/store'?'active':''">
+  <li class="menu-item" :class="$route.path=='/store'?' active':''">
     <router-link to="/store" class="menu-link">
       <i class='bx bx-store menu-icon'></i>
-      <div data-i18n="Dashboards">ສະຕ໋ອກສີນຄ້າ</div>
+      <div class="text-truncate" data-i18n="Dashboards">ສະຕ໋ອກສີນຄ້າ</div>
     </router-link>
   </li>
 
-  <li class="menu-item" :class="$route.path== '/pos'?'active':''">
+  <li class="menu-item" :class="$route.path=='/pos'?' active':''">
     <router-link to="/pos" class="menu-link">
       <i class='bx bx-cart menu-icon'></i>
-      <div data-i18n="Dashboards">ຂາຍສີນຄ້າ POS</div>
+      <div class="text-truncate" data-i18n="Dashboards">ຂາຍສີນຄ້າ POS</div>
     </router-link>
   </li>
 
-  <li class="menu-item" :class="$route.path== '/transection'?'active':''">
+  <li class="menu-item" :class="$route.path=='/transection'?' active':''">
     <router-link to="/transection" class="menu-link">
       <i class='bx bx-bar-chart-alt menu-icon'></i>
-      <div data-i18n="Dashboards">ການເຄື່ອນໄຫວ</div>
+      <div class="text-truncate" data-i18n="Dashboards">ການເຄື່ອນໄຫວ</div>
     </router-link>
   </li>
 
-  <li class="menu-item" :class="$route.path== '/report'?'active':''">
+  <li class="menu-item" :class="$route.path=='/report'?' active':''">
     <router-link to="/report" class="menu-link">
       <i class='bx bx-notepad menu-icon'></i>
-      <div data-i18n="Dashboards">ລາຍງານ</div>
+      <div class="text-truncate" data-i18n="Dashboards">ລາຍງານ</div>
     </router-link>
   </li>
 </ul>
@@ -90,6 +90,25 @@
 </template>
 
 <script>
+
+// $route.path== '/pos'?' active':'' ຂຽນ if else ແບບຫຍໍ້
+
+// ແບບຫຍໍ້ເຕັມ
+// let class_name = '';
+// if ($route.path== '/pos') {
+//   class_name = 'active'
+// }else{
+//   class_name = ''
+// }
+
+
+//  let class_name = '';
+//  if ($route.path== '/pos')
+//  return name = 'active'
+// name = ''
+
+
+
 export default {
     name: 'WebAppLrvMenuSidebar',
 
@@ -100,7 +119,7 @@ export default {
     },
 
     computed:{
-
+      
     }
     ,
 
