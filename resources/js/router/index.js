@@ -53,9 +53,9 @@ export const routes = [
         name: 'register',
         path: '/register',
         component: Register,
-        meta: {
-            middleware: [authMiddleware]
-        }
+        // meta: {
+        //     middleware: [authMiddleware]
+        // }
     },
     {
         name: 'pos',
