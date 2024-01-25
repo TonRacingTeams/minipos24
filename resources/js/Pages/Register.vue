@@ -13,13 +13,23 @@
         
                   
                     <div class="mb-3">
-                      <label for="email" class="form-label">ຊື່ຜູ້ໃຊ້ :</label>
-                      <input type="text" v-model="user_name" class="form-control" id="email" placeholder="ຊື່ຜູ້ໃຊ້ຂອງທ່ານ">
+                      <label for="name" class="form-label">ຊື່ຜູ້ໃຊ້ :</label>
+                      <input type="text" v-model="user_name" class="form-control" id="name" placeholder="...">
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="last_name" class="form-label">ຊື່ :</label>
+                      <input type="text" v-model="user_name" class="form-control" id="last_name" placeholder="...">
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="gender" class="form-label">ເພດ :</label>
+                      <input type="text" v-model="user_name" class="form-control" id="gender" placeholder="...">
                     </div>
                     
                     <div class="mb-3">
                       <label for="email" class="form-label">ອີເມວ :</label>
-                      <input type="text" v-model="email" class="form-control" id="email" placeholder="ອີເມວຂອງທ່ານ">
+                      <input type="text" v-model="email" class="form-control" id="email" placeholder="...">
                     </div>
                     <div class="mb-3 form-password-toggle">
                       <div class="d-flex justify-content-between">
@@ -37,7 +47,7 @@
                         
                       </div>
                       <div class="input-group input-group-merge">
-                        <input type="password" id="password" v-model="password2" class="form-control" placeholder="········">
+                        <input type="password" id="password2" v-model="password2" class="form-control" placeholder="········">
                         <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                       </div>
                     </div>
@@ -75,6 +85,8 @@ export default {
     data() {
         return {
             user_name : '',
+            last_name : '',
+            gender : '',
             email : '',
             password : '',
             password2 : '',
@@ -88,14 +100,16 @@ export default {
 
     methods: {
         Register(){
-                if (this.user_name == '' || this.email == '' || this.password == '' || this.password2 == '') {
-                    this.text_error = 'ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ!'
+                if (this.user_name == '' || this.last_name == '' || this.gender == '' || this.email == '' || this.password == '' || this.password2 == '') {
+                    this.text_error = 'ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ!';
                 }else{
                     if (this.password == this.password2) {
-                        this.text_error = '';
+                        this.text_error = ''
 
                         axios.post('api/register',{
                             from_user_name: this.user_name,
+                            from_last_name: this.last_name,
+                            from_gender: this.gender,
                             from_email: this.email,
                             from_password: this.password,
                         }).then((res)=>{
