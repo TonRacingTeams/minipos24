@@ -42,7 +42,10 @@ export const routes = [
     {
         name: 'home',
         path: '/',
-        component: Home
+        component: Home,
+        meta: {
+            middleware: [authMiddleware]
+        }
     },
     {
         name: 'login',

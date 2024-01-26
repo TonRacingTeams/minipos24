@@ -14,8 +14,8 @@
 
           
             <div class="mb-3">
-              <label for="email" class="form-label">ອີເມວ ຫຼື ບັນຊີ</label>
-              <input type="text" class="form-control" id="email" placeholder="ອີເມວຂອງທ່ານ ຫຼື ບັນຊີ">
+              <label for="email" class="form-label">ອີເມວ</label>
+              <input type="text" class="form-control rounded-pill" v-model="email" id="email" placeholder="ອີເມວ ...">
             </div>
             <div class="mb-3 form-password-toggle">
               <div class="d-flex justify-content-between">
@@ -25,7 +25,7 @@
                 </a> -->
               </div>
               <div class="input-group input-group-merge">
-                <input type="password" id="password" class="form-control" placeholder="········">
+                <input type="password" v-model="password" id="password" class="form-control" placeholder="• • • • • • • •">
                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
               </div>
             </div>
@@ -37,8 +37,14 @@
                 </label>
               </div>
             </div> -->
+
+            <div class="alert alert-danger" role="alert" v-if="check_email_text || check_pass_text">
+              {{check_email_text}} {{check_pass_text}}
+                    </div>
+
+            
             <div class="mb-3">
-              <button class="btn btn-primary d-grid w-100">ເຂົ້າໃຊ້ລະບົບ</button>
+              <button class="btn btn-primary d-grid w-100 rounded-pill" :disabled="check_from_login" >ເຂົ້າໃຊ້ລະບົບ</button>
             </div>
           
 
@@ -62,8 +68,45 @@ export default {
 
     data() {
         return {
-            
+            email: '',
+            password: '',
+            check_email_text: '',
+            check_pass_text: ''
         };
+    },
+
+    computed: {
+      check_from_login(){
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        //ກວດສອບອີເມວ
+
+        if (this.email) {
+          if (!emailRegex.test(this.email)) {
+            this.check_email_text = 'ອີເມວຂອງທ່ານບໍ່ຖືກຕ້ອງ';
+          }else{
+            this.check_email_text = '';
+          }
+        }
+
+        //ກວດສອບລະຫັດຜ່ານ
+
+        if (this.password) {
+          if (this.password.length <8) {
+            this.check_pass_text = 'ລະຫັດຜ່າານຕ້ອງ 8 ຕົວຂື້ນໄປ';
+          }else{
+            this.check_pass_text = '';
+          }
+        }
+
+        //ກວດສອບແລ້ວປິດປູ່ມ
+
+        if (!emailRegex.test(this.email) || this.password.length <8) {
+          return true;
+        }else{
+          return false;
+        }
+
+      }
     },
 
     mounted() {
