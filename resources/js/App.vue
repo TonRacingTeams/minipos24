@@ -128,9 +128,9 @@
                 <div class="dropdown-divider"></div>
               </li>
               <li>
-                <a class="dropdown-item" href="javascript:void(0);">
+                <a class="dropdown-item" @click="logout()" href="javascript:void(0)">
                   <i class="bx bx-power-off me-2"></i>
-                  <span class="align-middle">Log Out</span>
+                  <span class="align-middle">ອອກຈາກລະບົບ</span>
                 </a>
               </li>
             </ul>
@@ -208,7 +208,7 @@
 <script>
 
 import { useStore } from './Store/auth';
-
+import axios from 'axios';
 
 export default {
     name: 'WebAppLrvApp',
@@ -228,8 +228,35 @@ export default {
     },
 
     methods: {
-        
+        show(){
+          var ab = "test value 123456789";
+          console.log(ab);
+        },
+        logout(){
+            axios.get('api/logout',{headers:{ Authorization: 'Bearer' +this.store.get_token} }).then((res)=>{
+              
+                //ເຄຼຍຂໍ້ມູນໃນ localstorage ແລະ pinia
+              if (res.data.success) {
+                localStorage.removeItem('web_token');
+                localStorage.removeItem('web_user');
+                this.store.remove_token();
+                this.store.remove_user();
+
+                //ໄປໜ້າ login
+
+                this.$router.push('/login');
+
+
+              }
+            }).catch((error)=>{
+              console.log(error)
+            })
+        }
     },
+
+    created(){
+      this.show();
+    }
 };
 </script>
 

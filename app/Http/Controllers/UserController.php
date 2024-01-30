@@ -3,14 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-
+use JWTAuth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
+
+
 class UserController extends Controller
 {
     //
+
+    public function __construct(){
+        $this->middleware('auth:api', ['except' =>['login', 'register']]);
+        // $this->middleware('auth:api');
+    }
 
     public function register(Request $request){
             try{
@@ -54,4 +61,46 @@ class UserController extends Controller
 
             return response()->json($response);
     }
+
+
+
+    public function login(Request $request){
+        $user_login = [
+            'email' =>$request->login_email,
+            'password' =>$request->login_password
+
+        ];
+
+        $token = JWTAUTH::attempt($user_login);     //ກວດສອບອີເມວ ແລະ ລະຫັດຜ່ານແລ້ວສ້າງ token ຂື້ນມາ
+        $user = Auth::user();                       //ຫຼັງຈາກ login ແມ່ນດືງຂໍ້ມູນ user ທີ່  login ອອກມາ
+
+
+        if ($token) {
+            return response()->json([
+                'success' => true,
+                'message' => 'ສຳເລັດ',
+                'user' => $user,
+                'token' => $token
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'ອີເມວ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ!'
+            ]);
+        }
+    }
+
+    public function logout(){
+        $token = JWTAUTH::getToken();
+        $invalidate = JWTAUTH::invalidate($token);
+
+        if ($invalidate) {
+            return response()->json([
+                'success' => true,
+                'message' => 'ສຳເລັດ !',
+            ]);
+        }
+    }
+
+    
 }

@@ -25,8 +25,10 @@
                 </a> -->
               </div>
               <div class="input-group input-group-merge">
-                <input type="password" v-model="password" id="password" class="form-control" placeholder="• • • • • • • •">
-                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                <input :type="show_pass" @keyup.enter="login()" v-model="password" id="password" class="form-control" placeholder="• • • • • • • •">
+                <span class="input-group-text cursor-pointer" @click="show_pass=='password'? show_pass='text' :show_pass='password'">
+                  <i class="bx bx-hide" v-if="show_pass=='password'"></i>
+                  <i class='bx bx-show' v-if="show_pass=='text'"></i></span>
               </div>
             </div>
             <!-- <div class="mb-3">
@@ -38,13 +40,13 @@
               </div>
             </div> -->
 
-            <div class="alert alert-danger" role="alert" v-if="check_email_text || check_pass_text">
-              {{check_email_text}} {{check_pass_text}}
+            <div class="alert alert-danger" role="alert" v-if="check_email_text || check_pass_text || text_error">
+              {{check_email_text}} {{check_pass_text}} {{text_error}}
                     </div>
 
             
             <div class="mb-3">
-              <button class="btn btn-primary d-grid w-100 rounded-pill" :disabled="check_from_login" >ເຂົ້າໃຊ້ລະບົບ</button>
+              <button class="btn btn-primary d-grid w-100 rounded-pill" :disabled="check_from_login" @click="login()">ເຂົ້າໃຊ້ລະບົບ</button>
             </div>
           
 
@@ -71,7 +73,9 @@ export default {
             email: '',
             password: '',
             check_email_text: '',
-            check_pass_text: ''
+            check_pass_text: '',
+            show_pass: 'text',
+            text_error: ''
         };
     },
 
@@ -113,8 +117,35 @@ export default {
         
     },
 
+    // == ເທົ່າ    != ບໍ່ເທົ່າ    || ຫຼື      &&  ແລະ 
+
     methods: {
-        
+        login(){
+          if (this.email !='' && this.password !='') {
+            axios.post('api/login',{
+                            login_email: this.email,
+                            login_password: this.password
+                        }).then((res)=>{
+
+                          if (res.data.success) {
+                            
+                            this.email = '';
+                            this.password = '';
+                            localStorage.setItem('web_token', res.data.token);
+                            localStorage.setItem('web_user',JSON.stringify(res.data.user));
+
+                            this.$router.push('/')
+                            
+                            // this.$router.push('/');
+                          }else{
+                            this.text_error = res.data.message;
+                          }
+                            // console.log(res);
+                        }).catch((error)=>{
+                            console.log(error);
+                        })
+          }
+        }
     },
 };
 </script>
