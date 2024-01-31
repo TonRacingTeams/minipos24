@@ -4,35 +4,37 @@
   <div class="card-body">
 
 
-    <div v-if="ShowFrom">
+    <div v-if="ShowForm">
       <div class="text-end">
-        <button class="btn btn-info rounded-pill me-2 mb-4">ບັນທຶກ</button>
+        <button class="btn btn-info rounded-pill me-2 mb-4" :disabled="CheckFrom" @click="SaveStore()">ບັນທຶກ</button>
         <button class="btn btn-danger rounded-pill me-2 mb-4" @click="CancleStore">ຍົກເລີກ</button>
       </div>
+
+      {{ FormStore }}
 
       <div class="row">
         <div class="col-md-3">Image</div>
         <div class="col-md-9">
           <div class="mb-2">
               <label for="product_name" class="form-label fs-6">ຊື່ສີນຄ້າ:</label>
-              <input type="text" class="form-control" id="product_name" placeholder="...">
+              <input type="text" class="form-control rounded-pill" v-model="FormStore.name" id="product_name" placeholder="...">
           </div>
 
           <div>
               <label for="product_amount" class="form-label fs-6">ຈຳນວນ:</label>
-              <input type="text" class="form-control" id="product_amount" placeholder="...">
+              <input type="text" class="form-control rounded-pill" v-model="FormStore.amount"  id="product_amount" placeholder="...">
           </div>
 
           <div class="row">
             <div class="col-md-6">
               <div class="mb-2">
               <label for="product_price_buy" class="form-label fs-6">ລາຄາຊື້:</label>
-              <input type="text" class="form-control" id="product_price_buy" placeholder="...">
+              <input type="text" class="form-control rounded-pill" v-model="FormStore.price_by" id="product_price_buy" placeholder="...">
           </div>
             </div>
             <div class="col-md-6"><div class="mb-2">
               <label for="product_pice_sell" class="form-label fs-6">ລາຄາຂາຍ:</label>
-              <input type="text" class="form-control" id="product_pice_sell" placeholder="...">
+              <input type="text" class="form-control rounded-pill" v-model="FormStore.price_sell"  id="product_pice_sell" placeholder="...">
             </div>
           </div>
           </div>
@@ -44,7 +46,7 @@
 
 
 
-    <div class="table-responsive text-nowrap" v-if="!ShowFrom">
+    <div class="table-responsive text-nowrap" v-if="!ShowForm">
 
         <div class="d-flex justify-content-between mb-2">
             <div class="d-flex justify-items-center">
@@ -104,6 +106,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 
 import { useStore } from '../Store/auth'
 
@@ -117,8 +120,27 @@ export default {
 
     data() {
         return {
-            ShowFrom:false,
+            ShowForm:false,
+            FormType:true,
+            FormStore:{
+              name:'',
+              image:'',
+              amount:'',
+              price_by:'',
+              price_sell:'',
+            }
         };
+    },
+
+    computed:{
+      CheckFrom(){
+                  if (this.FormStore.name == '' || this.FormStore.amount == '' || this.FormStore.price_by == '' || this.FormStore.price_sell == '') {
+                    return true;
+                    
+                  }else{
+                    return false;
+                  }
+      }
     },
 
     mounted() {
@@ -127,12 +149,36 @@ export default {
 
     methods: {
         AddStore(){
-          this.ShowFrom = true;
+
+
+          this.ShowForm = true;
+          this.FormType = true;
 
         },
         CancleStore(){
-          this.ShowFrom = false;
-        }
+          this.ShowForm = false;
+        },
+
+          SaveStore(){
+            //ການກວດສອບຟອມ FormType = true ເປັນການເພີ່ມຂໍ້ມູນ, FormType = false ເປັນການອັບເດດຂໍ້ມູນ.
+
+            if (this.FormStore) {
+              //ການເພີ່ມຂໍ້ມຸນ
+
+              axios.post('api/stroe/add',this.FormStore, {headers:{"Content-Type":"multipart/form-data", Authorization:"Bearer" + this.store.get_token}}).then((res)=> {
+                  console.log(res)
+              }).catch((error)=>{
+                console.log(error)
+              })
+              
+            } else{
+              //ການອັບເດດຂໍ້ມູນ
+
+              
+
+
+            }
+          }
     },
 };
 </script>
