@@ -97,7 +97,7 @@ class UserController extends Controller
         if ($invalidate) {
             return response()->json([
                 'success' => true,
-                'message' => 'ສຳເລັດ !',
+                'message' => 'ສຳເລັດ !'
             ]);
         }
     }

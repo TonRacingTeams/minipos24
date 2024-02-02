@@ -128,7 +128,9 @@ export default {
               amount:'',
               price_by:'',
               price_sell:'',
-            }
+            },
+
+            StoreData:[],
         };
     },
 
@@ -150,6 +152,11 @@ export default {
     methods: {
         AddStore(){
 
+          this.FormStore.name = '';
+          this.FormStore.amount = '';
+          this.FormStore.price_by = '';
+          this.FormStore.price_sell = '';
+
 
           this.ShowForm = true;
           this.FormType = true;
@@ -165,8 +172,16 @@ export default {
             if (this.FormStore) {
               //ການເພີ່ມຂໍ້ມຸນ
 
-              axios.post('api/stroe/add',this.FormStore, {headers:{"Content-Type":"multipart/form-data", Authorization:"Bearer" + this.store.get_token}}).then((res)=> {
-                  console.log(res)
+              axios.post('api/store/add', this.FormStore, { headers:{ "Content-Type":"multipart/form-data", Authorization:"Bearer" + this.store.get_token}}).then((res)=> {
+                  
+                if (res.data.success) {
+                  this.ShowForm = false
+                }
+                
+                
+                // console.log(res)
+
+
               }).catch((error)=>{
                 console.log(error)
               })
@@ -178,8 +193,22 @@ export default {
 
 
             }
+          },
+
+          GetStore(){
+            axios.get('api/store', { headers:{ Authorization:"Bearer" + this.store.get_token} }).then((res)=> {
+                  
+              this.StoreData = res.data;
+  
+                }).catch((error)=>{
+                  console.log(error)
+                });
           }
     },
+
+    created(){
+      this.GetStore();      
+    }
 };
 </script>
 
