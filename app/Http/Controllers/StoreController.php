@@ -17,7 +17,7 @@ class StoreController extends Controller
 
         //ການດືງຂໍ້ມູນຈາກຕາລາງ ສົ່ງໄປສະແດງຜົນ
 
-        $store = Store::orderBy('id','desc')->get();
+        $store = Store::orderBy('id','asc')->get();
         return $store;
     }
 

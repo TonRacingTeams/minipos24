@@ -76,23 +76,24 @@
             <th>ຮູບ</th>
             <th>ຊື່ສີນຄ້າ</th>
             <th>ລາຄາຊື້</th>
+            <th>ລາຄາຂາຍ</th>
             <th>ຈັດການ</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>0001</td>
-            <td>001.png</td>
-            <td>
-              ໂຕໂຍຕ້າ
-            </td>
-            <td><span class="badge bg-label-primary me-1">1,200,000,00 BTH</span></td>
+          <tr v-for="list in StoreData" :key="list.id">
+            <td>{{list.id}}</td>
+            <td>-</td>
+            <td>{{list.name}}</td>
+            <td>{{list.price_buy}}</td>
+            <td>{{list.price_sell}}</td>
             <td>
               <div class="dropdown">
                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> ແກ້ໄຂ</a>
-                  <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> ລົບ</a>
+                  <a class="dropdown-item" href="javascript:void(0);"><i class='bx bx-copy-alt'></i> ກ໋ອບປີ້ </a>
+                  <a class="dropdown-item" href="javascript:void(0);" @click="EditStore(list.id)"><i class="bx bx-edit-alt me-1"></i> ແກ້ໄຂ </a>
+                  <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> ລົບລາຍການ </a>
                 </div>
               </div>
             </td>
@@ -122,6 +123,7 @@ export default {
         return {
             ShowForm:false,
             FormType:true,
+            EditID:'',
             FormStore:{
               name:'',
               image:'',
@@ -165,6 +167,31 @@ export default {
         CancleStore(){
           this.ShowForm = false;
         },
+
+
+
+        EditStore(id){
+            // console.log(id)
+
+            this.FormType = false;
+            this.EditID = id;
+
+            axios.get(`api/store/edit/${id}`, { headers:{ "Content-Type":"multipart/form-data", Authorization:"Bearer" + this.store.get_token}}). then((res)=>{
+                this.FormStore = res.data;
+            }).catch((error)=>{
+                console.log(error)
+              })
+
+                      // `api/store/edit/${id}`          ຫຼັກການຂຽນ api ແບບທີ່ 01
+                      // 'api/store/edit/' + id          ຫຼັກການຂຽນ api ແບບທີ່ 02
+
+
+        },
+
+
+
+
+
 
           SaveStore(){
             //ການກວດສອບຟອມ FormType = true ເປັນການເພີ່ມຂໍ້ມູນ, FormType = false ເປັນການອັບເດດຂໍ້ມູນ.
