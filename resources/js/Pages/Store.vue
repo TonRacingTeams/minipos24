@@ -29,7 +29,7 @@
             <div class="col-md-6">
               <div class="mb-2">
               <label for="product_price_buy" class="form-label fs-6">ລາຄາຊື້:</label>
-              <input type="text" class="form-control rounded-pill" v-model="FormStore.price_by" id="product_price_buy" placeholder="...">
+              <input type="text" class="form-control rounded-pill" v-model="FormStore.price_buy" id="product_price_buy" placeholder="...">
           </div>
             </div>
             <div class="col-md-6"><div class="mb-2">
@@ -49,10 +49,11 @@
     <div class="table-responsive text-nowrap" v-if="!ShowForm">
 
         <div class="d-flex justify-content-between mb-2">
-            <div class="d-flex justify-items-center">
+            <div class="d-flex justify-items-center"> {{ Sort }}
 
-                <div class="d-flex justify-items-center me-2">
-                    <i class='bx bx-sort-up fs-3'></i>
+                <div class="d-flex justify-items-center me-2 cursor-pointer" @click="ChangSort()">
+                    <i class='bx bx-sort-up fs-3' v-if="Sort=='asc'"></i>
+                    <i class='bx bx-sort-down fs-3' v-if="Sort=='desc'"></i>
                 </div>
                 
 
@@ -73,15 +74,15 @@
         <thead>
           <tr>
             <th>ID</th>
-            <th>ຮູບ</th>
+            <th>ຮູບສີນຄ້າ</th>
             <th>ຊື່ສີນຄ້າ</th>
-            <th>ລາຄາຊື້</th>
-            <th>ລາຄາຂາຍ</th>
+            <th>ລາຄາຊື້ (ກີບ)</th>
+            <th>ລາຄາຂາຍ (ກີບ)</th>
             <th>ຈັດການ</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="list in StoreData" :key="list.id">
+          <tr v-for="list in StoreData.data" :key="list.id">
             <td>{{list.id}}</td>
             <td>-</td>
             <td>{{list.name}}</td>
@@ -91,9 +92,9 @@
               <div class="dropdown">
                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" href="javascript:void(0);"><i class='bx bx-copy-alt'></i> ກ໋ອບປີ້ </a>
+                  <a class="dropdown-item" href="javascript:void(0);" @click="CopyStore(list.id)"><i class='bx bx-copy-alt'></i> ກ໋ອບປີ້ </a>
                   <a class="dropdown-item" href="javascript:void(0);" @click="EditStore(list.id)"><i class="bx bx-edit-alt me-1"></i> ແກ້ໄຂ </a>
-                  <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> ລົບລາຍການ </a>
+                  <a class="dropdown-item" href="javascript:void(0);" @click="DeleteStore(list.id)"><i class="bx bx-trash me-1"></i> ລົບລາຍການ </a>
                 </div>
               </div>
             </td>
@@ -101,6 +102,8 @@
           
         </tbody>
       </table>
+
+      <Pagination :pagination="StoreData" :offset="5" @paginate="GetStore($event)" />
     </div>
   </div>
 </div>
@@ -128,17 +131,18 @@ export default {
               name:'',
               image:'',
               amount:'',
-              price_by:'',
+              price_buy:'',
               price_sell:'',
             },
 
             StoreData:[],
+            Sort:'asc',
         };
     },
 
     computed:{
       CheckFrom(){
-                  if (this.FormStore.name == '' || this.FormStore.amount == '' || this.FormStore.price_by == '' || this.FormStore.price_sell == '') {
+                  if (this.FormStore.name == '' || this.FormStore.amount == '' || this.FormStore.price_buy == '' || this.FormStore.price_sell == '') {
                     return true;
                     
                   }else{
@@ -152,11 +156,24 @@ export default {
     },
 
     methods: {
+
+
+      ChangSort(){
+          if (this.Sort == 'asc') {
+              this.Sort = 'desc'
+          } else{
+            this.Sort = 'asc'
+          }
+
+          this.GetStore()
+      },
+
+
         AddStore(){
 
           this.FormStore.name = '';
           this.FormStore.amount = '';
-          this.FormStore.price_by = '';
+          this.FormStore.price_buy = '';
           this.FormStore.price_sell = '';
 
 
@@ -178,6 +195,7 @@ export default {
 
             axios.get(`api/store/edit/${id}`, { headers:{ "Content-Type":"multipart/form-data", Authorization:"Bearer" + this.store.get_token}}). then((res)=>{
                 this.FormStore = res.data;
+                this.ShowForm = true;
             }).catch((error)=>{
                 console.log(error)
               })
@@ -185,7 +203,36 @@ export default {
                       // `api/store/edit/${id}`          ຫຼັກການຂຽນ api ແບບທີ່ 01
                       // 'api/store/edit/' + id          ຫຼັກການຂຽນ api ແບບທີ່ 02
 
+            },
 
+
+            CopyStore(id){
+            // console.log(id)
+
+            this.FormType = true;
+            this.EditID = id;
+
+            axios.get(`api/store/edit/${id}`, { headers:{ "Content-Type":"multipart/form-data", Authorization:"Bearer" + this.store.get_token}}). then((res)=>{
+                this.FormStore = res.data;
+                this.ShowForm = true;
+            }).catch((error)=>{
+                console.log(error)
+              })
+
+                      // `api/store/edit/${id}`          ຫຼັກການຂຽນ api ແບບທີ່ 01
+                      // 'api/store/edit/' + id          ຫຼັກການຂຽນ api ແບບທີ່ 02
+
+            },
+
+
+        DeleteStore(id){
+          axios.delete(`api/store/delete/${id}`, { headers:{ Authorization:"Bearer" + this.store.get_token}}).then((res)=>{
+                if(res.data.success){
+                  this.GetStore()
+                }
+          }).catch((error)=>{
+            console.log(error)
+          })
         },
 
 
@@ -196,13 +243,14 @@ export default {
           SaveStore(){
             //ການກວດສອບຟອມ FormType = true ເປັນການເພີ່ມຂໍ້ມູນ, FormType = false ເປັນການອັບເດດຂໍ້ມູນ.
 
-            if (this.FormStore) {
+            if (this.FormType) {
               //ການເພີ່ມຂໍ້ມຸນ
 
               axios.post('api/store/add', this.FormStore, { headers:{ "Content-Type":"multipart/form-data", Authorization:"Bearer" + this.store.get_token}}).then((res)=> {
                   
                 if (res.data.success) {
                   this.ShowForm = false
+                  this.GetStore()
                 }
                 
                 
@@ -216,14 +264,27 @@ export default {
             } else{
               //ການອັບເດດຂໍ້ມູນ
 
-              
+              axios.post(`api/store/update/${this.EditID}`, this.FormStore, { headers:{ "Content-Type":"multipart/form-data", Authorization:"Bearer" + this.store.get_token}}).then((res)=> {
+                  
+                  if (res.data.success) {
+                    this.ShowForm = false
+                    this.GetStore()
+                  }
+                  
+                  
+                  // console.log(res)
+  
+  
+                }).catch((error)=>{
+                  console.log(error)
+                })
 
 
             }
           },
 
-          GetStore(){
-            axios.get('api/store', { headers:{ Authorization:"Bearer" + this.store.get_token} }).then((res)=> {
+          GetStore(page){
+            axios.get(`api/store?page=${page}&sort=${this.Sort}`, { headers:{ Authorization:"Bearer" + this.store.get_token} }).then((res)=> {
                   
               this.StoreData = res.data;
   
