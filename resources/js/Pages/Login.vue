@@ -25,10 +25,11 @@
                 </a> -->
               </div>
               <div class="input-group input-group-merge">
-                <input :type="show_pass" @keyup.enter="login()" v-model="password" id="password" class="form-control" placeholder="• • • • • • • •">
-                <span class="input-group-text cursor-pointer" @click="show_pass=='password'? show_pass='text' :show_pass='password'">
+                <input :type="show_pass" id="password" @keyup.enter="login()" v-model="password" class="form-control" placeholder="············">
+                <span class="input-group-text cursor-pointer" @click="show_pass=='password'?show_pass='text' :show_pass='password'">
                   <i class="bx bx-hide" v-if="show_pass=='password'"></i>
-                  <i class='bx bx-show' v-if="show_pass=='text'"></i></span>
+                  <i class='bx bx-show' v-if="show_pass=='text'"></i>
+                </span>
               </div>
             </div>
             <!-- <div class="mb-3">
@@ -74,7 +75,7 @@ export default {
             password: '',
             check_email_text: '',
             check_pass_text: '',
-            show_pass: 'text',
+            show_pass: 'password',
             text_error: ''
         };
     },

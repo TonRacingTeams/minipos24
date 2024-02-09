@@ -17,7 +17,9 @@ class StoreController extends Controller
 
         //ການດືງຂໍ້ມູນຈາກຕາລາງ ສົ່ງໄປສະແດງຜົນ
 
-        $store = Store::orderBy('id','asc')
+        $stort = \Request::get('sort');
+
+        $store = Store::orderBy('id',$stort)
         ->paginate(5)
         ->toArray();
 

@@ -49,7 +49,7 @@
     <div class="table-responsive text-nowrap" v-if="!ShowForm">
 
         <div class="d-flex justify-content-between mb-2">
-            <div class="d-flex justify-items-center"> {{ Sort }}
+            <div class="d-flex justify-items-center"> 
 
                 <div class="d-flex justify-items-center me-2 cursor-pointer" @click="ChangSort()">
                     <i class='bx bx-sort-up fs-3' v-if="Sort=='asc'"></i>
