@@ -18,9 +18,25 @@ class StoreController extends Controller
         //ການດືງຂໍ້ມູນຈາກຕາລາງ ສົ່ງໄປສະແດງຜົນ
 
         $stort = \Request::get('sort');
+        $perpage = \Request::get('perpage');
+        $search = \Request::get('search');
 
         $store = Store::orderBy('id',$stort)
-        ->paginate(5)
+
+        // ການຄົ້ນຫາຂໍ້ມູນໃນຟິວດຽວ Colunm
+        // ->where('name','LIKE',"%{$search}%")
+
+
+
+        // ການຄົ້ນຫາຂໍ້ມູນໃນຫຼາຍຟິວພ້ອມກັນ Colunms
+        ->where(
+            function($query) use ($search){
+                $query->where('name','LIKE',"%{$search}%")
+                ->orWhere('price_buy','LIKE',"%{$search}%")
+                ->orWhere('price_sell','LIKE',"%{$search}%");
+            }
+        )
+        ->paginate($perpage)
         ->toArray();
 
         return array_reverse($store);

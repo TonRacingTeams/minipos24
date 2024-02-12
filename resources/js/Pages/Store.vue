@@ -57,7 +57,7 @@
                 </div>
                 
 
-                <select class="form-select">
+                <select class="form-select" v-model="PerPage" @change="GetStore()">
             
             <option value="5">5</option>
             <option value="10">10</option>
@@ -66,7 +66,7 @@
 
             </div>
             <div>
-                <input type="text" class="from-control rounded me-2" placeholder="ຄົ້ນຫາ...">
+                <input type="text" class="from-control me-4 p-2 rounded-pill" v-model="Search" @keyup.enter="GetStore()" placeholder="ຄົ້ນຫາ...">
                 <button class="btn btn-primary rounded-pill" @click="AddStore()"><i class='bx bx-user-plus me-2 fs-4'></i> ເພີ່ມຂໍ້ມູນ</button>
             </div>
         </div>
@@ -104,6 +104,7 @@
       </table>
 
       <Pagination :pagination="StoreData" :offset="5" @paginate="GetStore($event)" />
+      <button @click="showAlert">Hello world</button>
     </div>
   </div>
 </div>
@@ -113,6 +114,7 @@
 import axios from 'axios';
 
 import { useStore } from '../Store/auth'
+import { watch } from 'vue';
 
 export default {
     name: 'WebAppLrvStore',
@@ -137,6 +139,8 @@ export default {
 
             StoreData:[],
             Sort:'asc',
+            PerPage:'5',
+            Search:'',
         };
     },
 
@@ -156,6 +160,15 @@ export default {
     },
 
     methods: {
+
+
+      showAlert() {
+          // Use sweetalert2
+          this.$swal({ title: "The Internet?",
+  text: "That thing is still around?",
+  icon: "question" });
+          
+      },
 
 
       ChangSort(){
@@ -284,7 +297,7 @@ export default {
           },
 
           GetStore(page){
-            axios.get(`api/store?page=${page}&sort=${this.Sort}`, { headers:{ Authorization:"Bearer" + this.store.get_token} }).then((res)=> {
+            axios.get(`api/store?page=${page}&sort=${this.Sort}&perpage=${this.PerPage}&search=${this.Search}`, { headers:{ Authorization:"Bearer" + this.store.get_token} }).then((res)=> {
                   
               this.StoreData = res.data;
   
@@ -296,6 +309,13 @@ export default {
 
     created(){
       this.GetStore();      
+    },
+    watch:{
+      Search(){
+        if (this.Search == '') {
+            this.GetStore()
+        }
+      }
     }
 };
 </script>

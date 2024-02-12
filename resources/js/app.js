@@ -13,8 +13,12 @@ const pania = createPinia();
 
 import Pagination from './Components/Pagination.vue';
 
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
 const app = createApp(App);
 app.component('MenuSidebar', MenuSidebar)
+app.use(VueSweetalert2)
 app.component('Pagination', Pagination)
 app.use(router)
 app.use(pania)
