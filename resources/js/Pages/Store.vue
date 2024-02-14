@@ -73,12 +73,12 @@
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>ຮູບສີນຄ້າ</th>
-            <th>ຊື່ສີນຄ້າ</th>
-            <th>ລາຄາຊື້ (ກີບ)</th>
-            <th>ລາຄາຂາຍ (ກີບ)</th>
-            <th>ຈັດການ</th>
+            <th width="32px">ID</th>
+            <th width="236px" class="text-center">ຮູບສີນຄ້າ</th>
+            <th width="336px" class="text-center">ຊື່ສີນຄ້າ</th>
+            <th width="159px" class="text-center">ລາຄາຊື້ (ກີບ)</th>
+            <th width="159px" class="text-center">ລາຄາຂາຍ (ກີບ)</th>
+            <th width="32px" class="text-center">ຈັດການ</th>
           </tr>
         </thead>
         <tbody>
@@ -86,9 +86,9 @@
             <td>{{list.id}}</td>
             <td>-</td>
             <td>{{list.name}}</td>
-            <td>{{list.price_buy}}</td>
-            <td>{{list.price_sell}}</td>
-            <td>
+            <td class="text-end">{{ formatPrice (list.price_buy) }}</td>
+            <td class="text-end">{{list.price_sell}}</td>
+            <td class="text-center">
               <div class="dropdown">
                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
                 <div class="dropdown-menu">
@@ -164,10 +164,19 @@ export default {
 
       showAlert() {
           // Use sweetalert2
-          this.$swal({ title: "The Internet?",
-  text: "That thing is still around?",
-  icon: "question" });
           
+          this.$swal({ 
+            title: 'res.data.message',
+                      icon: "error", 
+                      showConfirmButton: false,
+                      timer: 3600
+        });
+          
+      },
+
+      formatPrice(value) {
+        let val = (value / 1).toFixed(2).replace(",",".");
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
       },
 
 
@@ -211,6 +220,20 @@ export default {
                 this.ShowForm = true;
             }).catch((error)=>{
                 console.log(error)
+
+                if (error) {
+                    if (error.response.status == 401) {
+                      this.store.remove_token()
+                      this.store.remove_user()
+                      localStorage.removeItem("web_token")
+                      localStorage.removeItem("web_user")
+                      this.$router.push("/login")
+
+
+                    }
+                  }
+
+
               })
 
                       // `api/store/edit/${id}`          ຫຼັກການຂຽນ api ແບບທີ່ 01
@@ -230,6 +253,20 @@ export default {
                 this.ShowForm = true;
             }).catch((error)=>{
                 console.log(error)
+
+                if (error) {
+                    if (error.response.status == 401) {
+                      this.store.remove_token()
+                      this.store.remove_user()
+                      localStorage.removeItem("web_token")
+                      localStorage.removeItem("web_user")
+                      this.$router.push("/login")
+
+
+                    }
+                  }
+
+
               })
 
                       // `api/store/edit/${id}`          ຫຼັກການຂຽນ api ແບບທີ່ 01
@@ -239,13 +276,71 @@ export default {
 
 
         DeleteStore(id){
-          axios.delete(`api/store/delete/${id}`, { headers:{ Authorization:"Bearer" + this.store.get_token}}).then((res)=>{
+
+          
+          this.$swal({
+              title: " ທ່ານແນ່ໃຈ ຫຼື ບໍ່ ? ",
+              text: " ທີ່ຈະລົບລາຍການຂໍ້ມູນນີ້ ! ",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: " ຕົກລົກ ",
+              cancelButtonText: " ຍົກເລີກ "
+            }).then((result) => {
+              if (result.isConfirmed) {
+
+
+                axios.delete(`api/store/delete/${id}`, { headers:{ Authorization:"Bearer" + this.store.get_token}}).then((res)=>{
                 if(res.data.success){
                   this.GetStore()
+
+
+                  this.$swal({
+                      title: " ລົບຂໍ້ມູນ ! ",
+                      text: res.data.message,
+                      icon: "success",
+                      showConfirmButton: false,
+                      timer: 3600
+                });
+
+
+                } else {
+                  this.$swal({ 
+                      title: res.data.message,
+                      icon: "error", 
+                      showConfirmButton: false,
+                      timer: 3600
+        });
                 }
           }).catch((error)=>{
             console.log(error)
+
+
+            if (error) {
+                    if (error.response.status == 401) {
+                      this.store.remove_token()
+                      this.store.remove_user()
+                      localStorage.removeItem("web_token")
+                      localStorage.removeItem("web_user")
+                      this.$router.push("/login")
+
+
+                    }
+                  }
+
+                  
           })
+
+
+
+                
+              }
+            });
+  
+
+
+          
         },
 
 
@@ -264,6 +359,26 @@ export default {
                 if (res.data.success) {
                   this.ShowForm = false
                   this.GetStore()
+
+                  this.$swal({ 
+                      position: 'top-center',
+                      toast: true,
+                      title: res.data.message,
+                      icon: "success", 
+                      showConfirmButton: false,
+                      timer: 2300
+                  });
+
+
+                } else{
+                  this.$swal({ 
+
+                      title: res.data.message,
+                      icon: "error", 
+                      showConfirmButton: false,
+                      timer: 3600
+
+                  });
                 }
                 
                 
@@ -272,6 +387,20 @@ export default {
 
               }).catch((error)=>{
                 console.log(error)
+
+                if (error) {
+                    if (error.response.status == 401) {
+                      this.store.remove_token()
+                      this.store.remove_user()
+                      localStorage.removeItem("web_token")
+                      localStorage.removeItem("web_user")
+                      this.$router.push("/login")
+
+
+                    }
+                  }
+
+
               })
               
             } else{
@@ -290,6 +419,20 @@ export default {
   
                 }).catch((error)=>{
                   console.log(error)
+
+                  if (error) {
+                    if (error.response.status == 401) {
+                      this.store.remove_token()
+                      this.store.remove_user()
+                      localStorage.removeItem("web_token")
+                      localStorage.removeItem("web_user")
+                      this.$router.push("/login")
+
+
+                    }
+                  }
+
+
                 })
 
 
@@ -303,6 +446,17 @@ export default {
   
                 }).catch((error)=>{
                   console.log(error)
+                  if (error) {
+                    if (error.response.status == 401) {
+                      this.store.remove_token()
+                      this.store.remove_user()
+                      localStorage.removeItem("web_token")
+                      localStorage.removeItem("web_user")
+                      this.$router.push("/login")
+
+
+                    }
+                  }
                 });
           }
     },
