@@ -13,7 +13,10 @@
       {{ FormStore }}
 
       <div class="row">
-        <div class="col-md-3">Image</div>
+        <div class="col-md-3 text-center">
+          <img :src="image_previwe" alt="" @click="$refs.img_store.click()" class="cursor-pointer rounded" style="width: 100%;">
+          <input type="file" ref="img_store" style="display: none;" @change="onSelect">
+        </div>
         <div class="col-md-9">
           <div class="mb-2">
               <label for="product_name" class="form-label fs-6">ຊື່ສີນຄ້າ:</label>
@@ -22,19 +25,19 @@
 
           <div>
               <label for="product_amount" class="form-label fs-6">ຈຳນວນ:</label>
-              <input type="text" class="form-control rounded-pill" v-model="FormStore.amount"  id="product_amount" placeholder="...">
+              <cleave :options="options" class="form-control rounded-pill" v-model="FormStore.amount"  id="product_amount" placeholder="..." />
           </div>
 
           <div class="row">
             <div class="col-md-6">
               <div class="mb-2">
               <label for="product_price_buy" class="form-label fs-6">ລາຄາຊື້:</label>
-              <input type="text" class="form-control rounded-pill" v-model="FormStore.price_buy" id="product_price_buy" placeholder="...">
+              <cleave :options="options" class="form-control rounded-pill" v-model="FormStore.price_buy" id="product_price_buy" placeholder="..." />
           </div>
             </div>
             <div class="col-md-6"><div class="mb-2">
               <label for="product_pice_sell" class="form-label fs-6">ລາຄາຂາຍ:</label>
-              <input type="text" class="form-control rounded-pill" v-model="FormStore.price_sell"  id="product_pice_sell" placeholder="...">
+              <cleave :options="options" class="form-control rounded-pill" v-model="FormStore.price_sell"  id="product_pice_sell" placeholder="..." />
             </div>
           </div>
           </div>
@@ -76,6 +79,7 @@
             <th width="32px">ID</th>
             <th width="236px" class="text-center">ຮູບສີນຄ້າ</th>
             <th width="336px" class="text-center">ຊື່ສີນຄ້າ</th>
+            <th width="95px" class="text-center">ຈຳນວນ</th>
             <th width="159px" class="text-center">ລາຄາຊື້ (ກີບ)</th>
             <th width="159px" class="text-center">ລາຄາຂາຍ (ກີບ)</th>
             <th width="32px" class="text-center">ຈັດການ</th>
@@ -84,10 +88,15 @@
         <tbody>
           <tr v-for="list in StoreData.data" :key="list.id">
             <td>{{list.id}}</td>
-            <td>-</td>
+            <td class="text-center">
+              <!-- {{ list.image }} -->
+                <img :src="url + '/assets/img/' + list.image" v-if="list.image" class="rounded" style="width: 100%;">
+                <img :src="url + '/assets/img/no_photoJP.jpg'" v-else class="rounded" style="width: 100%;">
+            </td>
             <td>{{list.name}}</td>
+            <td class="text-center">{{list.amount}}</td>
             <td class="text-end">{{ formatPrice (list.price_buy) }}</td>
-            <td class="text-end">{{list.price_sell}}</td>
+            <td class="text-end">{{ formatPrice (list.price_sell) }}</td>
             <td class="text-center">
               <div class="dropdown">
                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
@@ -126,6 +135,8 @@ export default {
 
     data() {
         return {
+            url: window.location.origin,
+            image_previwe: window.location.origin + '/assets/img/upload_img.png',
             ShowForm:false,
             FormType:true,
             EditID:'',
@@ -141,6 +152,17 @@ export default {
             Sort:'asc',
             PerPage:'5',
             Search:'',
+            options: {
+              // prefix: '₭',
+              numeral: true,
+              numeralPositiveOnly: true,
+              noImmediatePrefix: true,
+              rawValueTrimPerfix: true,
+              numeralIntegerScale: 10,
+              numeralDecimalScale: 2,
+              numeralDecimalMark: ',',
+              delimiter: '.'
+                }
         };
     },
 
@@ -191,12 +213,26 @@ export default {
       },
 
 
+      onSelect(event){
+          // console.log(event.target.files[0])
+
+          this.FormStore.image = event.target.files[0]
+          let reader = new FileReader()
+          reader.readAsDataURL(this.FormStore.image)
+          reader.addEventListener("load",function(){
+            this.image_previwe =reader.result
+          }.bind(this),false)
+      },
+
+
         AddStore(){
 
           this.FormStore.name = '';
           this.FormStore.amount = '';
           this.FormStore.price_buy = '';
           this.FormStore.price_sell = '';
+          this.FormStore.image = '';
+          this.image_previwe = window.location.origin + '/assets/img/upload_img.png';
 
 
           this.ShowForm = true;
@@ -217,6 +253,13 @@ export default {
 
             axios.get(`api/store/edit/${id}`, { headers:{ "Content-Type":"multipart/form-data", Authorization:"Bearer" + this.store.get_token}}). then((res)=>{
                 this.FormStore = res.data;
+
+                if (res.data.image) {
+                  this.image_previwe = this.url + '/assets/img/' + res.data.image;
+                } else{
+                  this.image_previwe = this.url + '/assets/img/upload_img.png';
+                }
+
                 this.ShowForm = true;
             }).catch((error)=>{
                 console.log(error)
@@ -301,7 +344,7 @@ export default {
                       text: res.data.message,
                       icon: "success",
                       showConfirmButton: false,
-                      timer: 3600
+                      timer: 1500
                 });
 
 
@@ -366,7 +409,7 @@ export default {
                       title: res.data.message,
                       icon: "success", 
                       showConfirmButton: false,
-                      timer: 2300
+                      timer: 500
                   });
 
 

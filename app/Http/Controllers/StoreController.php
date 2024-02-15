@@ -50,10 +50,28 @@ class StoreController extends Controller
 
         try{
 
+            // return $request->file('image');
+            $upload_path = "assets/img";
+            // echo $request;
+
+            if($request->file('image')){
+
+                //ສ້າງຊື້ຮູບພາບໃໝ່ ແລ້ວອ່ານຄ່າປະເພດຂອງຮູບ
+
+                $generate_new_name_img = time().".".$request->image->getClientOriginalExtension();
+
+                //ທຳການອັບໂຫຼດ
+                $request->image->move(public_path($upload_path),$generate_new_name_img);
+
+            }else{
+                $generate_new_name_img = '';
+            }
+
             //ເພີ່ມຂໍ້ມູນລົງຕາຕະລາງ
 
             $store = new Store([
                 'name' => $request->name,
+                'image' => $generate_new_name_img,
                 'amount' => $request->amount,
                 'price_buy' => $request->price_buy,
                 'price_sell' => $request->price_sell
@@ -86,15 +104,48 @@ class StoreController extends Controller
     public function update($id,Request $request){
         try{
 
-            //ເພີ່ມຂໍ້ມູນລົງຕາຕະລາງ
+            $upload_path = "assets/img";
             $store = Store::find($id);
+
+        
+            // echo $request;
+
+            if($request->file('image')){
+
+                //ໄປລົບຮູບເກົ່າອອກກ່ອນ
+
+                if ($store->image) {
+                    if (file_exists($upload_path."/".$store->image)) {
+                        unlink($upload_path."/".$store->image); //ລົບໄຟຣເກົ່າອອກ
+                    }
+                }
+                // ການອັບໂຫຼດຮູບໃໝ່
+
+
+
+
+
+                //ສ້າງຊື້ຮູບພາບໃໝ່ ແລ້ວອ່ານຄ່າປະເພດຂອງຮູບ
+
+                $generate_new_name_img = time().".".$request->image->getClientOriginalExtension();
+
+                //ທຳການອັບໂຫຼດ
+                $request->image->move(public_path($upload_path),$generate_new_name_img);
+
+                
+            
             $store->update([
                 'name' => $request->name,
-                // 'image' => ,
+                'image' => $generate_new_name_img,
                 'amount' => $request->amount,
                 'price_buy' => $request->price_buy,
                 'price_sell' => $request->price_sell
             ]);
+
+            }else{
+                $generate_new_name_img = '';
+            }
+
             
             $success = true;
             $message = 'ອັບເດດຂໍ້ມູນສຳເລັດ !';
