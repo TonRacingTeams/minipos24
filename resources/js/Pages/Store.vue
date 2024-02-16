@@ -6,15 +6,24 @@
 
     <div v-if="ShowForm">
       <div class="text-end">
-        <button class="btn btn-info rounded-pill me-2 mb-4" :disabled="CheckFrom" @click="SaveStore()">ບັນທຶກ</button>
-        <button class="btn btn-danger rounded-pill me-2 mb-4" @click="CancleStore">ຍົກເລີກ</button>
+        <button class="btn btn-primary rounded-pill me-2 mb-4" :disabled="CheckFrom" @click="SaveStore()">ບັນທຶກ</button>
+        <button class="btn btn-secondary rounded-pill me-2 mb-4" @click="CancleStore">ຍົກເລີກ</button>
       </div>
 
-      {{ FormStore }}
+      <!-- {{ FormStore }} -->
 
       <div class="row">
-        <div class="col-md-3 text-center">
-          <img :src="image_previwe" alt="" @click="$refs.img_store.click()" class="cursor-pointer rounded" style="width: 100%;">
+        <div class="col-md-3 text-center" style="position: relative;">
+
+
+          <button type="button" v-if="FormStore.image" @click="RemoveImg()" class="btn rounded-pill btn-icon btn-primary" style="position: absolute; top: 10px; right: 5px;">
+
+            <i class='bx bx-trash fs-3' ></i>
+              
+              </button>
+              
+
+          <img :src="image_previwe" alt="" @click="$refs.img_store.click()" class="cursor-pointer rounded" style="width: 95%;">
           <input type="file" ref="img_store" style="display: none;" @change="onSelect">
         </div>
         <div class="col-md-9">
@@ -22,20 +31,22 @@
               <label for="product_name" class="form-label fs-6">ຊື່ສີນຄ້າ:</label>
               <input type="text" class="form-control rounded-pill" v-model="FormStore.name" id="product_name" placeholder="...">
           </div>
-
+          <br>
           <div>
               <label for="product_amount" class="form-label fs-6">ຈຳນວນ:</label>
               <cleave :options="options" class="form-control rounded-pill" v-model="FormStore.amount"  id="product_amount" placeholder="..." />
           </div>
-
+          <br>
           <div class="row">
             <div class="col-md-6">
-              <div class="mb-2">
+              <div class="mb-2 ">
               <label for="product_price_buy" class="form-label fs-6">ລາຄາຊື້:</label>
               <cleave :options="options" class="form-control rounded-pill" v-model="FormStore.price_buy" id="product_price_buy" placeholder="..." />
           </div>
             </div>
-            <div class="col-md-6"><div class="mb-2">
+            
+            <div class="col-md-6">
+              <div class="mb-2 ">
               <label for="product_pice_sell" class="form-label fs-6">ລາຄາຂາຍ:</label>
               <cleave :options="options" class="form-control rounded-pill" v-model="FormStore.price_sell"  id="product_pice_sell" placeholder="..." />
             </div>
@@ -196,6 +207,12 @@ export default {
           
       },
 
+      RemoveImg(){
+        this.FormStore.image = '';
+        this.image_previwe = window.location.origin + '/assets/img/upload_img.png';
+
+      },
+
       formatPrice(value) {
         let val = (value / 1).toFixed(2).replace(",",".");
         return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -326,9 +343,9 @@ export default {
               text: " ທີ່ຈະລົບລາຍການຂໍ້ມູນນີ້ ! ",
               icon: "warning",
               showCancelButton: true,
-              confirmButtonColor: "#3085d6",
-              cancelButtonColor: "#d33",
-              confirmButtonText: " ຕົກລົກ ",
+              confirmButtonColor: "#696cff",
+              cancelButtonColor: "#8592A3",
+              confirmButtonText: " ຕົກລົງ ",
               cancelButtonText: " ຍົກເລີກ "
             }).then((result) => {
               if (result.isConfirmed) {

@@ -74,7 +74,7 @@ class StoreController extends Controller
                 'image' => $generate_new_name_img,
                 'amount' => $request->amount,
                 'price_buy' => $request->price_buy,
-                'price_sell' => $request->price_sell
+                'price_sell' => $request->price_sell,
             ]);
             $store->save();
             $success = true;
@@ -143,7 +143,33 @@ class StoreController extends Controller
             ]);
 
             }else{
-                $generate_new_name_img = '';
+                // $generate_new_name_img = '';
+
+                if ($request->image) { // ກໍລະນີບໍ່ມີການປ່ຽນແປງຮູບພາບ
+                    $store->update([
+                        'name' => $request->name,
+                        // 'image' => $generate_new_name_img,
+                        'amount' => $request->amount,
+                        'price_buy' => $request->price_buy,
+                        'price_sell' => $request->price_sell
+                    ]);
+                } else { // ກໍລະນີຮູບພາບຖືກລົບອອກ
+                    
+                if ($store->image) {
+                    if (file_exists($upload_path."/".$store->image)) {
+                        unlink($upload_path."/".$store->image); //ລົບໄຟຣເກົ່າອອກ
+                    }
+                }
+
+                $store->update([
+                    'name' => $request->name,
+                    'image' => '',
+                    'amount' => $request->amount,
+                    'price_buy' => $request->price_buy,
+                    'price_sell' => $request->price_sell
+                ]);
+
+                }
             }
 
             
