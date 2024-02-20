@@ -1,17 +1,20 @@
 <template>
-<di class="row">
-    <div class="col-md-8">
+<div class="row">
+    <div class="col-md-7">
         <div class="card mb-4">
                 <div class="card-body">
-                    <input type="text" class="form-control rounded-pill" placeholder="ຄົ້ນຫາ...">
+                    <input type="text" class="form-control rounded-pill" placeholder="ຄົ້ນຫາ..." v-model="Search" @keyup.enter="GetStore()">
                 </div>   
         </div>
 
     <perfect-scrollbar>
-        <div class="row" style="overflow: auto; height: 59vh;">
+        <div style=" height: 51vh;">
+            <div class="row m-1">
             <div class="col-md-4" v-for="item in StoreData.data" :key="item">
-                <div class="card mb-3 cursor-pointer">
-                    <span class="number-list">{{ item.id }}</span>
+                <div class="card mb-3 cursor-pointer" @click="AddProduct(item.id)">
+                    <span v-for=" i in ListOrder" :key="i.id">
+                    <span class="number-list" v-if="item.id == i.id">{{ i.order_amount }}</span>
+                    </span>
                     <img class="card-img-top img-pos" v-if="item.image" :src="url + '/assets/img/'+item.image">
                     <img class="card-img-top img-pos" v-else :src="url + '/assets/img/no_photoJP.jpg'">
                     <div class="card-body p-2 text-center">
@@ -24,9 +27,10 @@
                     </div>
             </div>
         </div>
+        </div>
     </perfect-scrollbar>
     </div>
-    <div class="col-4">
+    <div class="col-5">
         <div class="card">
             <div class="card-body p-0">
                 <div class="p-3">
@@ -39,145 +43,50 @@
                     <hr>
                     
                     <div class="p-3">
-                        <div class="d-flex justify-content-between fs-4 fw-bold text-primary">
+                        <div class="d-flex justify-content-between fs-4 fw-bold text-danger">
                             <span>ລວມຍອດເງີນ:</span>
-                            <span>630,000 ກີບ</span>
+                            <span>{{ formatPrice(TotalAmount) }} ກີບ</span>
                         </div>
-                        <button class="btn btn-outline-primary fw-blod w-100 fs-5">ຊຳລະເງີນ</button>
+                        <button class="btn btn-primary rounded-pill fw-blod w-100 fs-5" :disabled="!TotalAmount" @click="ShowModal()">ຊຳລະເງີນ</button>
                     </div>
 
-                    <div class="table-responsive text-nowrap">
-    <table class="table border">
-      <thead>
-        <tr>
-          <th>Project</th>
-          <th>Client</th>
-          <th>Users</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><i class="bx bxl-angular bx-sm text-danger me-3"></i> <span class="fw-medium">Angular Project</span></td>
-          <td>Albert Cook</td>
-          <td>
-            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Lilian Fuller" data-bs-original-title="Lilian Fuller">
-                <img src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template-free/demo/assets/img/avatars/5.png" alt="Avatar" class="rounded-circle">
-              </li>
-              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Sophia Wilkerson" data-bs-original-title="Sophia Wilkerson">
-                <img src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template-free/demo/assets/img/avatars/6.png" alt="Avatar" class="rounded-circle">
-              </li>
-              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Christina Parker" data-bs-original-title="Christina Parker">
-                <img src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template-free/demo/assets/img/avatars/7.png" alt="Avatar" class="rounded-circle">
-              </li>
-            </ul>
-          </td>
-          <td><span class="badge bg-label-primary me-1">Active</span></td>
-          <td>
-            <div class="dropdown">
-              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit</a>
-                <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
-              </div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><i class="bx bxl-react bx-sm text-info me-3"></i> <span class="fw-medium">React Project</span></td>
-          <td>Barry Hunter</td>
-          <td>
-            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Lilian Fuller" data-bs-original-title="Lilian Fuller">
-                <img src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template-free/demo/assets/img/avatars/5.png" alt="Avatar" class="rounded-circle">
-              </li>
-              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Sophia Wilkerson" data-bs-original-title="Sophia Wilkerson">
-                <img src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template-free/demo/assets/img/avatars/6.png" alt="Avatar" class="rounded-circle">
-              </li>
-              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Christina Parker" data-bs-original-title="Christina Parker">
-                <img src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template-free/demo/assets/img/avatars/7.png" alt="Avatar" class="rounded-circle">
-              </li>
-            </ul>
-          </td>
-          <td><span class="badge bg-label-success me-1">Completed</span></td>
-          <td>
-            <div class="dropdown">
-              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit</a>
-                <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
-              </div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><i class="bx bxl-vuejs bx-sm text-success me-3"></i> <span class="fw-medium">VueJs Project</span></td>
-          <td>Trevor Baker</td>
-          <td>
-            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Lilian Fuller" data-bs-original-title="Lilian Fuller">
-                <img src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template-free/demo/assets/img/avatars/5.png" alt="Avatar" class="rounded-circle">
-              </li>
-              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Sophia Wilkerson" data-bs-original-title="Sophia Wilkerson">
-                <img src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template-free/demo/assets/img/avatars/6.png" alt="Avatar" class="rounded-circle">
-              </li>
-              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Christina Parker" data-bs-original-title="Christina Parker">
-                <img src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template-free/demo/assets/img/avatars/7.png" alt="Avatar" class="rounded-circle">
-              </li>
-            </ul>
-          </td>
-          <td><span class="badge bg-label-info me-1">Scheduled</span></td>
-          <td>
-            <div class="dropdown">
-              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit</a>
-                <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
-              </div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><i class="bx bxl-bootstrap bx-sm text-primary me-3"></i> <span class="fw-medium">Bootstrap Project</span></td>
-          <td>Jerry Milton</td>
-          <td>
-            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Lilian Fuller" data-bs-original-title="Lilian Fuller">
-                <img src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template-free/demo/assets/img/avatars/5.png" alt="Avatar" class="rounded-circle">
-              </li>
-              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Sophia Wilkerson" data-bs-original-title="Sophia Wilkerson">
-                <img src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template-free/demo/assets/img/avatars/6.png" alt="Avatar" class="rounded-circle">
-              </li>
-              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Christina Parker" data-bs-original-title="Christina Parker">
-                <img src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template-free/demo/assets/img/avatars/7.png" alt="Avatar" class="rounded-circle">
-              </li>
-            </ul>
-          </td>
-          <td><span class="badge bg-label-warning me-1">Pending</span></td>
-          <td>
-            <div class="dropdown">
-              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit</a>
-                <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-      <tfoot class="table-border-bottom-0">
-        <tr>
-          <th class="rounded-start-bottom">Project</th>
-          <th>Client</th>
-          <th>Users</th>
-          <th>Status</th>
-          <th class="rounded-end-bottom">Actions</th>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
+
+                    <div>
+                        <perfect-scrollbar class="mb-4">
+                            <div style="height: 32vh;">
+                                
+                            <div class="table-responsive text-nowrap mb-4" >
+
+                            <table class="table border">
+                            <thead>
+                                <tr>
+                                
+                                <th class="fs-6 fw-blod w-100">ລາຍການ</th>
+                                <th class="fs-6 fw-blod w-100">ລາຄາ</th>
+                                <th class="fs-6 fw-blod w-100">ຍອດລວມ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="list in ListOrder " :key="list.id">
+                                <td>{{ list.name }}</td>
+                                <td class="text-end">{{ formatPrice (list.price_sell) }} <br>
+                                    <i class='bx bx-minus-circle text-danger cursor-pointer' @click="RemoveProduct(list.id)"></i> {{ list.order_amount }} <i class='bx bx-plus-circle text-success cursor-pointer' @click="AddProduct(list.id)"></i> | <i class='bx bxs-trash text-danger cursor-pointer' @click="DeleteProduct(list.id)" ></i>
+                                </td>
+                                <td class="text-end">{{formatPrice (list.order_amount*list.price_sell) }}</td>
+
+                                
+                                </tr>
+                            </tbody>
+                            
+                            </table>
+                        
+                        </div>
+                    </div>
+                    </perfect-scrollbar>
+                </div>
+
+
+
 
             </div>
         </div>
@@ -185,7 +94,83 @@
 
     <!-- {{ StoreData }} -->
 
-</di>
+
+    <div class="modal fade" id="confrim_pay_modal" tabindex="-1" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel1">ການຊຳລະເງີນ</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                                <div class=" d-flex justify-content-between">
+                                <span>ລວມຍອດເງິນ:</span>
+                                <span>{{ formatPrice(TotalAmount) }} ກີບ</span>
+                            </div>
+                            <div class=" d-flex justify-content-between">
+                                <span>ຮັບເງິນນຳລູກຄ້າ:</span>
+                                <span>{{ formatPrice(CashAmount) }} ກີບ</span>
+                            </div>
+                            <div class=" d-flex justify-content-between text-danger" v-if="(CashAmount-TotalAmount)>0">
+                                <span>ເງິນທອນ:</span>
+                                <span>{{ formatPrice(CashAmount - TotalAmount) }} ກີບ</span>
+                            </div>
+
+                            <div class=" d-flex justify-content-center">
+                                <div class="row" style=" width: 250px; ">
+                            <div class=" col-md-4 mt-2">
+                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(1)" >1</button>
+                            </div>
+                            <div class=" col-md-4 mt-2">
+                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(2)" >2</button>
+                            </div>
+                            <div class=" col-md-4 mt-2"> 
+                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(3)" >3</button>
+                            </div>
+                            <div class=" col-md-4 mt-2">
+                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(4)" >4</button>
+                            </div>
+                            <div class=" col-md-4 mt-2">
+                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(5)" >5</button>
+                            </div>
+                            <div class=" col-md-4 mt-2">
+                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(6)" >6</button>
+                            </div>
+                            <div class=" col-md-4 mt-2">
+                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(7)" >7</button>
+                            </div>
+                            <div class=" col-md-4 mt-2">
+                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(8)" >8</button>
+                            </div>
+                            <div class=" col-md-4 mt-2">
+                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(9)" >9</button>
+                            </div>
+                            <div class=" col-md-4 mt-2">
+                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum('00')" >00</button>
+                            </div>
+                            <div class=" col-md-4 mt-2">
+                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(0)" >0</button>
+                            </div>
+                            <div class=" col-md-4 mt-2">
+                                <button class="btn btn-danger" style=" width: 60px;" @click="AddNum('-')" ><i class='bx bx-left-arrow-alt'></i></button>
+                            </div>
+
+
+                        </div>
+                  </div>
+                  
+                  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary rounded-pill">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+</div>
 </template>
 
 <script>
@@ -216,7 +201,59 @@ export default {
         
     },
 
+    computed:{
+        TotalAmount(){
+            let caculate = this.ListOrder.reduce((num, item)=> parseInt(num) + (parseInt(item.order_amount) * parseInt(item.price_sell)),0)
+            return caculate
+        }
+    },
+
     methods: {
+
+        ShowModal(){
+            $('#confrim_pay_modal').modal('show')
+        },
+
+        formatPrice(value) {
+        let val = (value / 1).toFixed(2).replace(",",".");
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      },
+
+        AddProduct(id){
+            // console.log(id);
+            let item = this.StoreData.data.find((i) =>i.id == id)
+
+            let list_order_item = this.ListOrder.find((i)=>i.id == id)
+
+            if (list_order_item) {
+                list_order_item.order_amount++;
+            } else {
+                // console.log(item);
+                    this.ListOrder.push({
+                        id: item.id,
+                        name: item.name,
+                        order_amount: 1,
+                        price_sell: item.price_sell
+                    })
+            }
+
+            
+        },
+
+        RemoveProduct(id){
+            let item = this.ListOrder.find((i)=> i.id == id)
+            if (item) {
+                item.order_amount--;
+
+                if (item.order_amount<1) {
+                    this.ListOrder.splice(this.ListOrder.map((i)=>id).indexOf(id),1)
+                }
+            }
+        },
+
+        DeleteProduct(id){
+            this.ListOrder.splice(this.ListOrder.map((i)=>id).indexOf(id),1)
+        },
         
         GetStore(page){
             axios.get(`api/store?page=${page}&sort=${this.Sort}&perpage=${this.PerPage}&search=${this.Search}`, { headers:{ Authorization:"Bearer" + this.store.get_token} }).then((res)=> {
@@ -245,6 +282,13 @@ export default {
     },
     created(){
         this.GetStore()
+    },
+    watch:{
+      Search(){
+        if (this.Search == '') {
+            this.GetStore()
+        }
+      }
     }
 };
 </script>
