@@ -36,9 +36,9 @@
                 <div class="p-3">
                     
                     <label for="customer_name">ຊື່ລູກຄ້າ: </label>
-                    <input type="text" class="form-control rounded-pill" placeholder="........">
+                    <input type="text" class="form-control rounded-pill" v-model="customer_name" id="customer_name" placeholder="........">
                     <label for="customer_tel">ເບີໂທ: </label>
-                    <input type="text" class="form-control rounded-pill" placeholder="........">
+                    <input type="text" class="form-control rounded-pill" v-model="customer_tel" id="customer_tel" placeholder="........">
                 </div>
                     <hr>
                     
@@ -163,8 +163,8 @@
                   
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary rounded-pill">Save changes</button>
+                  <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">ປິດ</button>
+                  <button type="button" class="btn btn-primary rounded-pill" :disabled="!(CashAmount>=TotalAmount)" @click="ConfirmPay()">ຢືນຢັນຊຳລະເງີນ</button>
                 </div>
               </div>
             </div>
@@ -174,6 +174,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 
 
 import { useStore } from '../Store/auth'
@@ -193,7 +194,10 @@ export default {
             PerPage: '30',
             Search: '',
             StoreData: [],
-            ListOrder: []
+            ListOrder: [],
+            CashAmount:'',
+            customer_name:'',
+            customer_tel:'',
         };
     },
 
@@ -210,8 +214,69 @@ export default {
 
     methods: {
 
+        AddNum(num){
+            if (num == '-') {
+                this.CashAmount = this.CashAmount.slice(0,-1);
+            } else {
+                this.CashAmount = this.CashAmount + num;
+            }
+        },
+
         ShowModal(){
             $('#confrim_pay_modal').modal('show')
+        },
+
+        ConfirmPay(){
+            axios.post('api/transection/add',{
+                customer_name: this.customer_name,
+                customer_tel: this.customer_tel,
+                listorder: this.ListOrder,
+                acc_type: 'income'
+
+            }, { headers:{ Authorization:"Bearer" + this.store.get_token}}).then((res)=>{
+
+                if (res.data.success) {
+                  
+
+                  this.$swal({ 
+                      position: 'top-center',
+                      toast: true,
+                      title: res.data.message,
+                      icon: "success", 
+                      showConfirmButton: false,
+                      timer: 500
+                  });
+
+
+                } else{
+                  this.$swal({ 
+
+                      title: res.data.message,
+                      icon: "error", 
+                      showConfirmButton: false,
+                      timer: 3600
+
+                  });
+                }
+
+
+            }).catch((error)=>{
+                console.log(error)
+
+                if (error) {
+                    if (error.response.status == 401) {
+                      this.store.remove_token()
+                      this.store.remove_user()
+                      localStorage.removeItem("web_token")
+                      localStorage.removeItem("web_user")
+                      this.$router.push("/login")
+
+
+                    }
+                  }
+
+
+              })
         },
 
         formatPrice(value) {
