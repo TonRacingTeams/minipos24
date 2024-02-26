@@ -426,7 +426,7 @@ export default {
                       title: res.data.message,
                       icon: "success", 
                       showConfirmButton: false,
-                      timer: 500
+                      timer: 1000
                   });
 
 

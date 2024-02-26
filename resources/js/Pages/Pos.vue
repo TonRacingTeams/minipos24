@@ -70,7 +70,7 @@
                                 <tr v-for="list in ListOrder " :key="list.id">
                                 <td>{{ list.name }}</td>
                                 <td class="text-end">{{ formatPrice (list.price_sell) }} <br>
-                                    <i class='bx bx-minus-circle text-danger cursor-pointer' @click="RemoveProduct(list.id)"></i> {{ list.order_amount }} <i class='bx bx-plus-circle text-success cursor-pointer' @click="AddProduct(list.id)"></i> | <i class='bx bxs-trash text-danger cursor-pointer' @click="DeleteProduct(list.id)" ></i>
+                                    <i class='bx bx-minus-circle text-danger cursor-pointer opacity-87' @click="RemoveProduct(list.id)"></i> {{ list.order_amount }} <i class='bx bx-plus-circle text-success cursor-pointer' @click="AddProduct(list.id)"></i> | <i class='bx bxs-trash text-danger cursor-pointer' @click="DeleteProduct(list.id)" ></i>
                                 </td>
                                 <td class="text-end">{{formatPrice (list.order_amount*list.price_sell) }}</td>
 
@@ -118,42 +118,42 @@
                             </div>
 
                             <div class=" d-flex justify-content-center">
-                                <div class="row" style=" width: 250px; ">
+                                <div class="row" style=" width: 236px; ">
                             <div class=" col-md-4 mt-2">
-                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(1)" >1</button>
+                                <button class="btn btn-outline-primary rounded-pill" style=" width: 59px; height: 59px;" @click="AddNum(1)" >1</button>
                             </div>
                             <div class=" col-md-4 mt-2">
-                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(2)" >2</button>
+                                <button class="btn btn-outline-primary rounded-pill" style=" width: 59px; height: 59px;;" @click="AddNum(2)" >2</button>
                             </div>
                             <div class=" col-md-4 mt-2"> 
-                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(3)" >3</button>
+                                <button class="btn btn-outline-primary rounded-pill" style=" width: 59px; height: 59px;" @click="AddNum(3)" >3</button>
                             </div>
                             <div class=" col-md-4 mt-2">
-                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(4)" >4</button>
+                                <button class="btn btn-outline-primary rounded-pill" style=" width: 59px; height: 59px;" @click="AddNum(4)" >4</button>
                             </div>
                             <div class=" col-md-4 mt-2">
-                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(5)" >5</button>
+                                <button class="btn btn-outline-primary rounded-pill" style=" width: 59px; height: 59px;" @click="AddNum(5)" >5</button>
                             </div>
                             <div class=" col-md-4 mt-2">
-                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(6)" >6</button>
+                                <button class="btn btn-outline-primary rounded-pill" style=" width: 59px; height: 59px;" @click="AddNum(6)" >6</button>
                             </div>
                             <div class=" col-md-4 mt-2">
-                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(7)" >7</button>
+                                <button class="btn btn-outline-primary rounded-pill" style=" width: 59px; height: 59px;" @click="AddNum(7)" >7</button>
                             </div>
                             <div class=" col-md-4 mt-2">
-                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(8)" >8</button>
+                                <button class="btn btn-outline-primary rounded-pill" style=" width: 59px; height: 59px;" @click="AddNum(8)" >8</button>
                             </div>
                             <div class=" col-md-4 mt-2">
-                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(9)" >9</button>
+                                <button class="btn btn-outline-primary rounded-pill" style=" width: 59px; height: 59px;" @click="AddNum(9)" >9</button>
                             </div>
                             <div class=" col-md-4 mt-2">
-                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum('00')" >00</button>
+                                <button class="btn btn-outline-primary rounded-pill" style=" width: 59px; height: 59px;" @click="AddNum('00')" >00</button>
                             </div>
                             <div class=" col-md-4 mt-2">
-                                <button class="btn btn-primary" style=" width: 60px;" @click="AddNum(0)" >0</button>
+                                <button class="btn btn-outline-primary rounded-pill" style=" width: 59px; height: 59px;" @click="AddNum(0)" >0</button>
                             </div>
                             <div class=" col-md-4 mt-2">
-                                <button class="btn btn-danger" style=" width: 60px;" @click="AddNum('-')" ><i class='bx bx-left-arrow-alt'></i></button>
+                                <button class="btn btn-outline-danger rounded-pill" style=" width: 59px; height: 59px;" @click="AddNum('-')" ><i class='bx bx-arrow-back'></i></button>
                             </div>
 
 
@@ -237,6 +237,14 @@ export default {
 
                 if (res.data.success) {
                   
+                    $('#confrim_pay_modal').modal('hide')
+
+                    this.customer_name = ''
+                    this.customer_tel = ''
+                    this.ListOrder = []
+                    this.CashAmount = ''
+                    this.GetStore()
+
 
                   this.$swal({ 
                       position: 'top-center',
@@ -244,7 +252,7 @@ export default {
                       title: res.data.message,
                       icon: "success", 
                       showConfirmButton: false,
-                      timer: 500
+                      timer: 3600
                   });
 
 
