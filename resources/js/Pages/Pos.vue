@@ -247,7 +247,7 @@ export default {
 
 
                   this.$swal({ 
-                      position: 'top-center',
+                      position: 'top-end',
                       toast: true,
                       title: res.data.message,
                       icon: "success", 

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\TransectionController;
+use App\Http\Controllers\BillController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,4 +42,12 @@ Route::controller(TransectionController::class)->group(function (){
     Route::post('transection/add', 'add');
     // Route::post('transection/update/{id}', 'update');
     // Route::delete('transection/delete/{id}', 'delete');
+});
+
+Route::controller(BillController::class)->group(function (){
+    // Route::get('bills', 'index');
+    // Route::get('bills/edit/{id}', 'edit');
+    Route::get('bills/print/{id}', 'print_bill');
+    // Route::post('bills/update/{id}', 'update');
+    // Route::delete('bills/delete/{id}', 'delete');
 });

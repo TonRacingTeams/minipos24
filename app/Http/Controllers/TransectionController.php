@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Transection;
 use App\Models\Bill;
 use App\Models\Bill_List;
+use App\Models\Store;
 
 
 class TransectionController extends Controller
@@ -115,6 +116,15 @@ class TransectionController extends Controller
                     'price' => $item['price_sell']
                 ]);
                 $bill_lis->save();
+
+
+                //ອັບເດດສະຕ໋ອກສີນຄ້າ
+
+                $store = Store::find($item['id']);
+                $store_update = Store::find($item['id']);
+                $store_update->update([
+                    'amount' => $store->amount - $item['order_amount']
+                ]);
 
             }   
 
