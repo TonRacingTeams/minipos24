@@ -137,12 +137,14 @@ class TransectionController extends Controller
             //throw $th;
             $success = false;
             $message = $ex->getMessage();
+            $bill_id = null;
             
         }
 
         $response = [
             'success' => $success,
-            'message' => $message
+            'message' => $message,
+            'bill_id' => $bill_id
         ];
         
         return response()->json($response);

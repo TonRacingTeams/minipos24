@@ -10,6 +10,11 @@ class BillController extends Controller
 {
     //
 
+    public function __construct(){
+        
+        $this->middleware('auth:api');
+    }
+
     public function print_bill($id){
 
         $bill = Bill::where('bill_id',$id)->get();
