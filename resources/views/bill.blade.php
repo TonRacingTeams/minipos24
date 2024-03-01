@@ -19,11 +19,11 @@
 {{ $bill_list }}-->
 
 
-<div class="container text-center mt-10" style="width: 1000px; color: black;">
+<div class="container text-center mt-10" style="width: 1000px; color: black">
 <p>ສາທາລະນະລັດ ປະຊາທິປະໄຕ ປະຊາຊົນລາວ</p>
 <p>ສັນຕິພາບ ເອກະລາດ ປະຊາທິປະໄຕ ເອກະພາບ ວັດທະນະຖາວອນ</p>
 
-<h2 class="mt-4" style="color: black;">ໃບບີນຮັບເງີນ</h2>
+<h2 class="mt-4" style="color: black">ໃບບີນຮັບເງີນ</h2>
 
 <div class="d-flex justify-content-end">
     <span>ໃບບີນເລກທີ : {{ $bill[0]['bill_id']}}</span>
@@ -42,14 +42,14 @@
 
 </div>
 
-<table class="table table-bordered">
-    <thead >
+<table class="table table-bordered border-dark" >
+    <thead class="table-dark">
     
-    <th class= "80" style="color: black;">ລ/ດ</th>
-    <th class= "text-center 1200" style="color: black;">ລາຍການ</th>
-    <th class= "text-center 150" style="color: black;">ລາຄາ</th>
-    <th class= "text-center 60" style="color: black;">ຈຳນວນ</th>
-    <th class= "text-center 200" style="color: black;">ລວມ</th>
+    <th class= "text-center 80 " style="color: white; font-size: 4mm; font-weight: bold;">ລ/ດ</th>
+    <th class= "text-center 1200" style="color: white; font-size: 4mm; font-weight: bold;">ລາຍການ</th>
+    <th class= "text-center 150" style="color: white; font-size: 4mm; font-weight: bold;">ລາຄາ</th>
+    <th class= "text-center 60" style="color: white; font-size: 4mm; font-weight: bold;">ຈຳນວນ</th>
+    <th class= "text-center 200" style="color: white; font-size: 4mm; font-weight: bold;">ລວມ</th>
     </thead>
 
     <tbody>
@@ -58,18 +58,18 @@
         @foreach($bill_list as $b)
 
         <tr>
-            <td style="color: black;">{{$num++}}</td>
+            <td style="color: black">{{$num++}}</td>
             <td style="color: black;">{{$b['name']}}</td>
-            <td class="text-end" style="color: black;">{{number_format($b['price'],0,',','.')}}</td>
-            <td style="color: black;">{{$b['amount']}}</td>
-            <td class="text-end" style="color: black;">{{number_format($b['price']*$b['amount'],0,',','.')}}</td>
+            <td class="text-end" style="color: black">{{number_format($b['price'],0,',','.')}}</td>
+            <td style="color: black">{{$b['amount']}}</td>
+            <td class="text-end" style="color: black">{{number_format($b['price']*$b['amount'],0,',','.')}}</td>
             @php($total += $b['price']*$b['amount'])
         </tr>
         @endforeach
 
         <tr>
-            <td colspan="4" style="color: black;"> ລວມທັງໝົດ :</td>
-            <td class="text-end" style="color: red;">{{ number_format($total,0,',','.')}}</td>
+            <td colspan="4" style="color: black"> ລວມທັງໝົດ :</td>
+            <td class="text-end" style="color: red; font-size: 6mm; font-weight: bold;">{{ number_format($total,0,',','.')}}</td>
         </tr>
     </tbody>
 </table>
