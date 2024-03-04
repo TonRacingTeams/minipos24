@@ -13,7 +13,7 @@
                 </div>
                 
 
-                <select class="form-select" v-model="PerPage">
+                <select class="form-select" v-model="PerPage" @click="GetTransection()">
             
             <option value="5">5</option>
             <option value="10">10</option>
@@ -112,6 +112,8 @@ export default {
             this.Sort = 'asc'
           }
 
+          this.GetTransection()
+
       },
       GetTransection(page){
         axios.post(`api/transection?page=${page}&sort=${this.Sort}&perpage=${this.PerPage}`,{
@@ -138,6 +140,16 @@ export default {
     },
     created(){
         this.GetTransection()
+    },
+
+    watch:{
+      month_type(){
+        this.GetTransection()
+      },
+
+      dmy(){
+        this.GetTransection()
+      }
     }
 };
 </script>
