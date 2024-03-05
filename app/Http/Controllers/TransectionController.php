@@ -53,18 +53,13 @@ class TransectionController extends Controller
     public function add(Request $request){
         try {
 
-
-
-
-
-
             /// ບັນທຶກຂໍ້ມູນໃບບິນ
 
 
 
             $bill='';
             $read_tran = Bill::all()->sortByDesc('id')->take(1)->toArray();
-            foreach ($read_tran as $new) {
+            foreach ($read_tran as $new){
                 $bill_id = $new['bill_id'];
             }
             if ($bill_id!='') {
@@ -124,14 +119,14 @@ class TransectionController extends Controller
 
 
 
-                 // ເພີ່ມຂໍ້ມູນລໄງຕາຕະລາງ
+                 // ເພີ່ມຂໍ້ມູນລົງຕາຕະລາງ
                 $tran = new Transection([
                     'tran_id' => $tnum.$number,
                     'tran_type' => $request->acc_type,
                     'product_id' => $item['id'],
                     'amount' => $item['order_amount'],
                     'price' => $item['order_amount']*$item['price_sell'],
-                    'tran_detail' => $item['name'],
+                    'tran_detail' =>"ຂາຍສິນຄ້າອອກ, " .$item['name'],
 
                 ]);
                 $tran->save();
@@ -155,7 +150,7 @@ class TransectionController extends Controller
                 $store = Store::find($item['id']);
                 $store_update = Store::find($item['id']);
                 $store_update->update([
-                    'amount' => $store->amount - $item['order_amount']
+                    'amount' => $store->amount - $item["order_amount"]
                 ]);
 
             }   
