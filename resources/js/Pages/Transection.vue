@@ -1,6 +1,6 @@
 <template>
 <div class="card">
-  <h5 class="card-header">ຂໍ້ມູນການຂາຍ</h5>
+  <h5 class="card-header">ການເຄື່ອນໃຫວທຸລະກຳ</h5>
   <div class="card-body">
     <div class="table-responsive text-nowrap">
 
