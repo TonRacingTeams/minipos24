@@ -51,3 +51,4 @@ Route::controller(BillController::class)->group(function (){
     // Route::post('bills/update/{id}', 'update');
     // Route::delete('bills/delete/{id}', 'delete');
 });
+

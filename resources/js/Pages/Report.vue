@@ -22,7 +22,7 @@
             
         </div>
             <LineChart :chartData="testdata" />
-            <DoughnutChart :chartData="testdata" />
+            <!-- <DoughnutChart :chartData="testdata" /> -->
     </div>
   </div>
 </div>
@@ -67,11 +67,49 @@ export default {
                         backgroundColor: ['#77CEFF', '#0079AF', '#123E6B', '#97B0C4', '#A5C8ED'],
                         },
                     ],
-                    }
-        };
-    },
+                    },
+
+                    chData:[],
+                            choption:{
+                                plugins:{
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function (tooltipItem, data) {
+                                                // console.log(data)
+                                            return (Number(tooltipItem.raw) .toFixed(0) .replace(/./g, function (c, i, a) { return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "." + c : c; }) + " ກີບ" );
+                                            },
+                                        },
+                                        mode: "index",
+                                        intersect: false,
+                                        },
+                                    
+                                },
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        scales: {
+                                        y:{
+                                        ticks: {
+                                            display: true,
+                                            beginAtZero: false,
+                                            callback: function (value, index, values) {
+                                                // console.log(value)
+                                            return ( Number(value) .toFixed(0) .replace(/./g, function (c, i, a) { return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "." + c : c; }) + " ກີບ" );
+                                            },
+                                        },
+                                        gridLines: {
+                                            show: true,
+                                        },
+                                        },
+                                    },
+                                    
+                            },
+                            sum_income:0,
+                            sum_expense:0,
+                        };
+                    },
     components:{
-        LineChart, DoughnutChart
+        LineChart
+        //  DoughnutChart
     },
 
     mounted() {
