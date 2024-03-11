@@ -21,8 +21,8 @@
             </div>
             
         </div>
-            <LineChart :chartData="testdata" />
-            <!-- <DoughnutChart :chartData="testdata" /> -->
+            <LineChart :chartData="chData" :option="chData" />
+
     </div>
   </div>
 </div>
@@ -40,9 +40,10 @@
 
 <script>
 import { useStore } from '../Store/auth'
-import { LineChart, DoughnutChart }from 'vue-chart-3'
+import { LineChart }from 'vue-chart-3'
 
 import { Chart, registerables } from 'chart.js';
+import axios from 'axios';
 Chart.register(...registerables);
 
 
@@ -76,7 +77,8 @@ export default {
                                         callbacks: {
                                             label: function (tooltipItem, data) {
                                                 // console.log(data)
-                                            return (Number(tooltipItem.raw) .toFixed(0) .replace(/./g, function (c, i, a) { return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "." + c : c; }) + " ກີບ" );
+                                            return (
+                                                Number(tooltipItem.raw) .toFixed(0) .replace(/./g, function (c, i, a) { return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "." + c : c; }) + " ກີບ" );
                                             },
                                         },
                                         mode: "index",
@@ -109,7 +111,7 @@ export default {
                     },
     components:{
         LineChart
-        //  DoughnutChart
+        
     },
 
     mounted() {
@@ -117,8 +119,71 @@ export default {
     },
 
     methods: {
-        
+        CreatedReport(){
+
+
+            axios.post(`api/report`, {
+                month_type: this.month_type,
+                dmy:this.dmy
+            },{ headers:{ Authorization:"Bearer" + this.store.get_token}}).then((res)=>{
+            
+
+                let labels = res.data.labels
+                this.chData = {
+                    labels: labels,
+                    datasets:[
+                        {
+                            label: "ລາຍຮັບ",
+                            fill: false,
+                            borderColor: "#3fc3ee",
+                            data: res.data.income,
+                            backgroundColor:"#9BD0F5"
+                        },
+                        {
+                            label: "ລາຍຈ່າຍ",
+                            fill: false,
+                            borderColor: "#f1556c",
+                            data: res.data.expense,
+                            backgroundColor:"#FFB1C1"
+                        }
+                    ]
+                }
+
+                this.sum_income = res.data.sum_income
+                this.sum_expense = res.data.sum_expense
+
+
+
+        }).catch((error)=>{
+            console.log(error)
+
+            if (error) {
+                    if (error.response.status == 401) {
+                      this.store.remove_token()
+                      this.store.remove_user()
+                      localStorage.removeItem("web_token")
+                      localStorage.removeItem("web_user")
+                      this.$router.push("/login")
+
+
+                    }
+                  }
+        })
+
+        }
     },
+
+    created(){
+        this.CreatedReport()
+    },
+    watch:{
+        dmy(){
+            this.CreatedReport()
+        },
+        month_type(){
+            this.CreatedReport()
+        }
+    }
 };
 </script>
 
