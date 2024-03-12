@@ -21,7 +21,7 @@
             </div>
             
         </div>
-            <LineChart :chartData="chData" :option="chData" />
+            <LineChart :chartData="chData" :option="choption" />
 
     </div>
   </div>
