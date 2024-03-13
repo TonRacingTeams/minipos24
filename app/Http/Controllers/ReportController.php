@@ -33,7 +33,7 @@ class ReportController extends Controller
  
         if ($month_type == "m") {
             
-            // ຊອກຫາວັນທີສຸດທ້າຍຂອງເດືອນ
+            // ຊອກຫາວັນທີສຸດທ້າຍຂອງລາຍເດືອນ
 
             $last_day = date("t",strtotime($dmy));
             // return $last_day;
@@ -44,13 +44,13 @@ class ReportController extends Controller
 
             // return $lables;
 
-            // ການບວກລາຍຮັບທັງໝົດ
+            // ການບວກລາຍຮັບທັງໝົດລາຍເດືອນ
             $sum_income = Transection::whereMonth("created_at",$m)
                 ->whereYear("created_at",$y)
                 ->where("tran_type","income")
                 ->sum("price");
 
-            // ການເພີ່ມລາຍການ ລາຍຮັບ
+            // ການເພີ່ມລາຍການ ລາຍຮັບ ລາຍເດືອນ
 
             for ($i=1; $i<= $last_day; $i++) {
                 
@@ -71,29 +71,29 @@ class ReportController extends Controller
 
 
 
-            // ການບວກລາຍຈ່າຍທັງໝົດ
-            $sum_income = Transection::whereMonth("created_at",$m)
+            // ການບວກລາຍຈ່າຍທັງໝົດ ລາຍເດືອນ
+            $sum_expense = Transection::whereMonth("created_at",$m)
                 ->whereYear("created_at",$y)
                 ->where("tran_type","expense")
                 ->sum("price");
 
-            // ການເພີ່ມລາຍການ ລາຍຈ່າຍ
+            // ການເພີ່ມລາຍການ ລາຍຈ່າຍ ລາຍເດືອນ
 
             for ($i=1; $i<= $last_day; $i++) {
                 
-                $inc = Transection::whereMonth("created_at",$m)
+                $exp = Transection::whereMonth("created_at",$m)
                     ->whereYear("created_at",$y)
                     ->whereDay("created_at",$i)
                     ->where("tran_type","expense")
                     ->sum("price");
 
-                    array_push($income,$inc);
+                    array_push($expense,$exp);
             }
             
         } else if ($month_type == "y") {
            
             
-             // ຊອກຫາວັນທີສຸດທ້າຍຂອງປີ
+             // ຊອກຫາວັນທີສຸດທ້າຍຂອງລາຍປີ
 
              $last_day = date("t",strtotime($dmy));
              // return $last_day;
@@ -104,21 +104,21 @@ class ReportController extends Controller
  
              // return $lables;
  
-             // ການບວກລາຍຮັບທັງໝົດ
-             $sum_expense = Transection::whereYear("created_at",$y)
-                 ->where("tran_type","expense")
+             // ການບວກລາຍຮັບທັງໝົດ ລາຍປີ
+             $sum_income = Transection::whereYear("created_at",$y)
+                 ->where("tran_type","income")
                  ->sum("price");
  
-             // ການເພີ່ມລາຍການ ລາຍຮັບ
+             // ການເພີ່ມລາຍການ ລາຍຮັບ ລາຍປີ
  
              for ($i=1; $i<= $last_day; $i++) {
                  
-                 $exp = Transection::whereYear("created_at",$y)
+                 $inc = Transection::whereYear("created_at",$y)
                      ->whereDay("created_at",$i)
-                     ->where("tran_type","expense")
+                     ->where("tran_type","income")
                      ->sum("price");
  
-                     array_push($expense,$exp);
+                     array_push($income,$inc);
              }
  
  
@@ -129,12 +129,12 @@ class ReportController extends Controller
  
  
  
-             // ການບວກລາຍຈ່າຍທັງໝົດ
+             // ການບວກລາຍຈ່າຍທັງໝົດ ລາຍປີ
              $sum_expense = Transection::whereYear("created_at",$y)
                  ->where("tran_type","expense")
                  ->sum("price");
  
-             // ການເພີ່ມລາຍການ ລາຍຈ່າຍ
+             // ການເພີ່ມລາຍການ ລາຍຈ່າຍ ລາຍປີ
  
              for ($i=1; $i<= $last_day; $i++) {
                  

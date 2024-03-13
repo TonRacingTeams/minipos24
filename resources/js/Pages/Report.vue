@@ -21,16 +21,38 @@
             </div>
             
         </div>
-            <LineChart :chartData="chData" :option="choption" />
+            <LineChart :chartData="chData" :options="choption" />
 
     </div>
   </div>
 </div>
 </div>
         <div class="col-md-4">
-            <div class="card">
+
+            <div class="card md-4">
                 <div class="card-body">
-                ແຈ້ງຈຳນວນ
+                    <div class="d-flex justify-content-between">
+                        <span> <i class="bx bx-trending-up fs-4 text-primary"></i><br> ລາຍຮັບ </span>
+                        <span> {{  formatPrice(sum_income) }} ກີບ </span>
+                    </div>
+            </div>
+            </div>
+
+            <div class="card md-4 mt-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <span> <i class="bx bx-trending-down fs-4 text-primary"></i><br> ລາຍຈ່າຍ </span>
+                        <span> {{  formatPrice(sum_expense) }} ກີບ </span>
+                    </div>
+            </div>
+            </div>
+
+            <div class="card md-4 mt-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <span> <i class="bx bxs-objects-vertical-bottom fs-4 text-primary"></i><br> ກຳໄລ </span>
+                        <span> {{  formatPrice(sum_income-sum_expense) }} ກີບ </span>
+                    </div>
             </div>
             </div>
         </div>
@@ -78,7 +100,8 @@ export default {
                                             label: function (tooltipItem, data) {
                                                 // console.log(data)
                                             return (
-                                                Number(tooltipItem.raw) .toFixed(0) .replace(/./g, function (c, i, a) { return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "." + c : c; }) + " ກີບ" );
+                                                
+                                                Number(tooltipItem.raw) .toFixed(0) .replace(/./g, function (c, i, a) { return i > 0 && c !== "," && (a.length - i) % 3 === 0 ? "," + c : c; }) + " ກີບ" );
                                             },
                                         },
                                         mode: "index",
@@ -95,7 +118,7 @@ export default {
                                             beginAtZero: false,
                                             callback: function (value, index, values) {
                                                 // console.log(value)
-                                            return ( Number(value) .toFixed(0) .replace(/./g, function (c, i, a) { return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "." + c : c; }) + " ກີບ" );
+                                            return ( Number(value) .toFixed(0) .replace(/./g, function (c, i, a) { return i > 0 && c !== "," && (a.length - i) % 3 === 0 ? "," + c : c; }) + " ກີບ" );
                                             },
                                         },
                                         gridLines: {
@@ -119,6 +142,13 @@ export default {
     },
 
     methods: {
+
+        formatPrice(value) {
+            let val = (value / 1).toFixed(0).replace(",",".");
+            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        },
+
+
         CreatedReport(){
 
 
